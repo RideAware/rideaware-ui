@@ -302,7 +302,7 @@ export default {
       this.successMessage = null;
 
       try {
-        const response = await axios.post('http://localhost:5000/auth/signup', {
+        const response = await axios.post('http://localhost:5000/api/signup', {
           firstName: this.firstName,
           lastName: this.lastName,
           username: this.username,

@@ -153,7 +153,7 @@ export default {
       this.loginSuccess = false;
 
       try {
-        const response = await axios.post('http://localhost:5000/auth/login', {
+        const response = await axios.post('http://localhost:5000/api/login', {
           username: this.username,
           password: this.password,
         });
