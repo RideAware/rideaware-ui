@@ -1,43 +1,46 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 
-// Lazy load components for better performance
 const routes = [
   { 
     path: '/', 
     name: 'Home',
-    component: () => import('../components/Home.vue') 
+    component: () => import('../components/Home.vue'),
+    meta: { title: 'RideAware – Home' } 
   },
   { 
     path: '/login', 
     name: 'Login',
-    component: () => import('../components/UserLogin.vue') 
+    component: () => import('../components/UserLogin.vue'),
+    meta: { title: 'RideAware – Sign In' } 
   },
-  { 
-    path: '/logged-in', 
-    name: 'LoggedIn',
-    component: () => import('../components/LoggedinPage.vue'),
-    // Optional: Add route guard to check if user is actually logged in
-    meta: { requiresAuth: true }
-  }
-];
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: () => import('../components/UserSignup.vue'),
+    meta: { title: 'RideAware – Sign Up' }
+  },
+  
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})
 
-// Optional: Navigation guard example
 router.beforeEach((to, from, next) => {
-  // Check if route requires authentication
   if (to.meta.requiresAuth) {
-    // Check if user is logged in (implement your auth logic)
-    const isLoggedIn = localStorage.getItem('user') || sessionStorage.getItem('user');
+    const isLoggedIn = !!(localStorage.getItem('user') || sessionStorage.getItem('user'))
     if (!isLoggedIn) {
-      next('/login');
-      return;
+      next({ name: 'Login' })
+      return
     }
   }
-  next();
-});
+  next()
+})
 
-export default router;
+router.afterEach((to) => {
+  const defaultTitle = 'RideAware'
+  document.title = to.meta.title || defaultTitle
+})
+
+export default router

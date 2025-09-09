@@ -1,6 +1,5 @@
 <template>
   <div class="login-page">
-    <!-- Background Elements -->
     <div class="login-bg">
       <div class="floating-elements">
         <div 
@@ -12,10 +11,8 @@
       </div>
     </div>
 
-    <!-- Login Container -->
     <div class="login-container">
       <div class="login-card">
-        <!-- Logo/Header -->
         <div class="login-header">
           <div class="logo">
             Ride<span class="logo-accent">Aware</span>
@@ -24,7 +21,6 @@
           <p class="login-subtitle">Sign in to continue your cycling journey</p>
         </div>
 
-        <!-- Login Form -->
         <form @submit.prevent="login" class="login-form">
           <div class="form-group">
             <label for="username" class="form-label">Username</label>
@@ -77,13 +73,17 @@
           <button 
             type="submit" 
             class="login-button"
-            :class="{ 'loading': isLoading }"
+            :class="{ 'loading': isLoading, 'success': loginSuccess }"
             :disabled="isLoading"
           >
-            <span v-if="!isLoading">Sign In</span>
-            <span v-else class="loading-text">
+            <span v-if="!isLoading && !loginSuccess">Sign In</span>
+            <span v-else-if="isLoading" class="loading-text">
               <i class="fas fa-spinner fa-spin"></i>
               Signing In...
+            </span>
+            <span v-else-if="loginSuccess" class="success-text">
+              <i class="fas fa-check"></i>
+              Success! Redirecting...
             </span>
           </button>
 
@@ -102,13 +102,16 @@
           </button>
         </form>
 
-        <!-- Error Message -->
         <div v-if="error" class="error-message">
           <i class="fas fa-exclamation-triangle"></i>
           {{ error }}
         </div>
 
-        <!-- Sign Up Link -->
+        <div v-if="loginSuccess" class="success-message">
+          <i class="fas fa-check-circle"></i>
+          Login successful! Redirecting to homepage...
+        </div>
+
         <div class="signup-prompt">
           <p>Don't have an account? <a href="/signup" class="signup-link">Sign up</a></p>
         </div>
@@ -129,6 +132,7 @@ export default {
       password: '',
       error: null,
       isLoading: false,
+      loginSuccess: false,
       showPassword: false,
       rememberMe: false,
       floatingElements: []
@@ -146,26 +150,35 @@ export default {
 
       this.isLoading = true;
       this.error = null;
+      this.loginSuccess = false;
 
       try {
-        const response = await axios.post('http://127.0.0.1:5000/login', {
+        const response = await axios.post('http://localhost:5000/auth/login', {
           username: this.username,
           password: this.password,
         });
         
         console.log('Login successful:', response.data);
         
-        // Store user data if remember me is checked
+        const userData = {
+          user_id: response.data.user_id,
+          username: this.username,
+          loginTime: new Date().toISOString()
+        };
+
         if (this.rememberMe) {
-          localStorage.setItem('user', JSON.stringify(response.data));
+          localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.setItem('authToken', 'authenticated');
         } else {
-          sessionStorage.setItem('user', JSON.stringify(response.data));
+          sessionStorage.setItem('user', JSON.stringify(userData));
+          sessionStorage.setItem('authToken', 'authenticated');
         }
         
-        // Add success animation before redirect
+        this.loginSuccess = true;
+        
         setTimeout(() => {
-          this.$router.push('/logged-in');
-        }, 500);
+          this.$router.push('/');
+        }, 1500);
         
       } catch (error) {
         console.error('Login failed:', error.response?.data);

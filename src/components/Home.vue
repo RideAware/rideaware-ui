@@ -1,19 +1,24 @@
 <template>
   <div class="homepage">
-    <!-- Navigation -->
     <nav class="navbar">
       <div class="nav-content">
         <div class="logo" @click="scrollTo('hero')">
           Ride<span class="logo-accent">Aware</span>
         </div>
         <ul class="nav-links">
-          <li><a href="#" @click.prevent="scrollTo('features')">Features</a></li>
-          <li><a href="/newsletters" @click.prevent="goToNewsletters">Newsletters</a></li>
+          <li>
+            <a href="#" @click.prevent="scrollTo('features')">Features</a>
+          </li>
+          <li>
+            <router-link to="/login" class="login-link">Login</router-link>
+          </li>
+          <li>
+            <router-link to="/signup" class="signup-btn">Sign Up</router-link>
+          </li>
         </ul>
       </div>
     </nav>
 
-    <!-- Hero Section -->
     <section id="hero" class="hero">
       <div class="hero-bg"></div>
       <div class="floating-elements">
@@ -72,7 +77,6 @@
       </div>
     </section>
 
-    <!-- Features Section -->
     <section id="features" class="features">
       <div class="section-header">
         <h2 class="section-title">{{ featuresTitle }}</h2>
@@ -101,7 +105,6 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
     <section class="stats">
       <div class="container">
         <div class="stats-grid">
@@ -113,7 +116,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
       <div class="container">
         <div class="footer-content">
@@ -225,7 +227,6 @@ export default {
     const animatedStats = reactive({})
     const floatingElements = reactive([])
 
-    // Generate floating elements
     const generateFloatingElements = () => {
       for (let i = 0; i < 15; i++) {
         floatingElements.push({
@@ -239,7 +240,6 @@ export default {
       }
     }
 
-    // Animate stats on scroll
     const animateStats = () => {
       platformStats.forEach(stat => {
         let current = 0
@@ -264,14 +264,11 @@ export default {
     }
 
     const goToNewsletters = () => {
-      // Handle navigation to newsletters page
-      // This could be a router push in a real Vue app
       window.location.href = '/newsletters'
     }
 
     const handleNotifyMe = () => {
       if (isValidEmail.value) {
-        // Here you would typically send the email to your backend
         alert(`Thanks! We'll notify you at ${emailInput.value} when RideAware launches.`)
         emailInput.value = ''
       } else {
@@ -293,7 +290,6 @@ export default {
     onMounted(() => {
       generateFloatingElements()
       
-      // Intersection Observer for stats animation
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -308,7 +304,6 @@ export default {
         observer.observe(statsSection)
       }
 
-      // Parallax effect for hero background
       window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset
         const parallax = document.querySelector('.hero-bg')
@@ -318,7 +313,6 @@ export default {
         }
       })
 
-      // Animate mockup stats
       let statIndex = 0
       setInterval(() => {
         activeStat.value = mockupStats[statIndex].id
