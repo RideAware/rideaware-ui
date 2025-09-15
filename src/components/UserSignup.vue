@@ -84,6 +84,7 @@
                 :class="{ 'error': error && !email }"
                 placeholder="Enter your email"
                 required 
+                autocomplete="email"
               />
             </div>
           </div>
@@ -100,6 +101,7 @@
                 :class="{ 'error': error && !password }"
                 placeholder="Create a password"
                 required 
+                autocomplete="new-password"
               />
               <button 
                 type="button" 
@@ -135,6 +137,7 @@
                 :class="{ 'error': error && !confirmPassword || passwordMismatch }"
                 placeholder="Confirm your password"
                 required 
+                autocomplete="new-password"
               />
               <button 
                 type="button" 
@@ -210,7 +213,7 @@
         </div>
 
         <div class="login-prompt">
-          <p>Already have an account? <a href="/login" class="login-link">Sign in</a></p>
+          <p>Already have an account? <router-link to="/login" class="login-link">Sign In</router-link></p>
         </div>
       </div>
     </div>
@@ -277,6 +280,7 @@ export default {
       }
     },
     isFormValid() {
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
       return this.firstName && 
              this.lastName && 
              this.username && 

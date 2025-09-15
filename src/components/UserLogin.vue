@@ -113,7 +113,7 @@
         </div>
 
         <div class="signup-prompt">
-          <p>Don't have an account? <a href="/signup" class="signup-link">Sign up</a></p>
+          <p>Don't have an account? <router-link to="/signup" class="signup-link">Sign up</router-link></p>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 # Multi-stage build for production
-FROM node:18-alpine AS build-stage
+FROM node:20-alpine AS build-stage
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+#ENV NODE_ENV=production
+RUN npm ci --no-audit --no-fund
 
 # Copy source code
 COPY . .
@@ -29,4 +30,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Start nginx
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD wget -qO- http://localhost/healthz >/dev/null 2>&1 || exit 1
 CMD ["nginx", "-g", "daemon off;"]

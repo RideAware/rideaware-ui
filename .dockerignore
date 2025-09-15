@@ -4,9 +4,9 @@ npm-debug.log
 .gitignore
 README.md
 .env
+.env.*
 .nyc_output
 coverage
-.nyc_output
 .vscode
 .DS_Store
 dist
